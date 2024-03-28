@@ -161,7 +161,6 @@ impl Program {
                 break Err(e);
             }
             if self.pc as usize >= self.instructions.len() {
-                println!("{}", self.output);
                 println!("Interpreted {} instruction(s)", self.counter);
                 break Ok(());
             }

@@ -10,5 +10,4 @@ fn main() {
     let args = Arguments::parse();
     let mut program = Program::load(args.file);
     let _ = program.run();
-    println!();
 }
