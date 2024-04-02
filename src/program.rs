@@ -166,4 +166,67 @@ impl Program {
             }
         }
     }
+
+    pub fn run_interactive(&mut self) -> Result<(), String> {
+        'outer: loop {
+            // Read user input
+            let mut input = String::new();
+            io::stdin().read_line(&mut input).expect("Failed to read line");
+
+            let mut parts = input.trim().split_whitespace();
+            let command = parts.next().unwrap_or("");
+
+            match command {
+                "r" | "run" => {
+                    if let Err(e) = self.run() {
+                        break Err(e);
+                    }
+                },
+                "s" | "step" => {
+                    let number = parts.next().unwrap_or("1").parse::<i32>().unwrap_or(1);
+                    for _ in 0..number {
+                        if let Err(e) = self.step() {
+                            break 'outer Err(e);
+                        }
+                    }
+                },
+                "q" | "quit" => {
+                    break Ok(());
+                },
+                "p" | "print" => {
+                    let index = parts.next().unwrap_or("0").parse::<i32>().unwrap_or(0);
+                    let amount = parts.next().unwrap_or("1").parse::<i32>().unwrap_or(1);
+                    for i in index..index + amount {
+                        print!("{}, ", self.memory[i as usize]);
+                    }
+                    println!();
+                },
+                "o" | "output" => {
+                    println!("{}", self.output);
+                },
+                "h" | "help" => {
+                    println!("Commands are the following");
+                    println!("- r | run : Run the rest of the program");
+                    println!("- s | step [number]: Run the next number of instruction (default is 1)");
+                    println!("- q | quit: Quit the program");
+                    println!("- p | print index[:amount]: Print the memory at index (default is 0) with amount (default is 1)");
+                    println!("- o | output: Print the current output");
+                    println!("- h | help: Print the help message");
+                    println!("- c | counter: Print the number of instruction executed");
+                    println!("- d | dp: Print the current data pointer");
+                },
+                "c" | "counter" => {
+                    println!("Number of instruction executed: {}", self.counter);
+                },
+                "d" | "dp" => {
+                    println!("Data pointer: {}", self.dp);
+                },
+                _ => {  // Default case is step
+                    if let Err(e) = self.step() {
+                        break 'outer Err(e);
+                    }
+                }
+            }
+        }
+    }
 }
