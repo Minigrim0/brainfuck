@@ -8,7 +8,7 @@ pub struct Arguments {
     #[arg(short, long)]
     pub file: String,
 
-    /// Interpret interactively, waiting between each instruction and display cells values
+    /// Interpret interactively, allowing to inspect memory & instruction pointer
     #[arg(short, long)]
     pub interactive: bool,
 
