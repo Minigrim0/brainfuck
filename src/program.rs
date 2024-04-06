@@ -1,6 +1,5 @@
-use std::{fs::File, io};
-use std::io::BufRead;
-use std::io::Read;
+use std::fs::File;
+use std::io::{self, BufRead, Read, Write};
 
 pub enum Instructions {  /// From wikipedia
     MR, // > 	Increment the data pointer by one (to point to the next cell to the right).
@@ -170,6 +169,8 @@ impl Program {
     pub fn run_interactive(&mut self) -> Result<(), String> {
         'outer: loop {
             // Read user input
+            print!("> ");
+            std::io::stdout().flush().unwrap();
             let mut input = String::new();
             io::stdin().read_line(&mut input).expect("Failed to read line");
 
@@ -206,14 +207,14 @@ impl Program {
                 },
                 "h" | "help" => {
                     println!("Commands are the following");
-                    println!("- r | run : Run the rest of the program");
-                    println!("- s | step [number]: Run the next number of instruction (default is 1)");
-                    println!("- q | quit: Quit the program");
-                    println!("- p | print index[:amount]: Print the memory at index (default is 0) with amount (default is 1)");
-                    println!("- o | output: Print the current output");
-                    println!("- h | help: Print the help message");
-                    println!("- c | counter: Print the number of instruction executed");
-                    println!("- d | dp: Print the current data pointer");
+                    println!("r - run                  : Run the rest of the program");
+                    println!("s - step [number]        : Run the next number of instruction (default is 1)");
+                    println!("q - quit                 : Quit the program");
+                    println!("p - print index[:amount] : Print the memory at index (default is 0) with amount (default is 1)");
+                    println!("o - output               : Print the current output");
+                    println!("h - help                 : Print the help message");
+                    println!("c - counter              : Print the number of instruction executed");
+                    println!("d - dp                   : Print the current data pointer");
                 },
                 "c" | "counter" => {
                     println!("Number of instruction executed: {}", self.counter);
